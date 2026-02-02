@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuentas Claras v2.4 - PWA Edition</title>
+    
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN1ZW50YXMgQ2xhcmFzIiwKICAic2hvcnRfbmFtZSI6ICJDdWVudGFzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmOGZhZmMiLAogICJ0aGVtZV9jbG9yIjogIiMzYjgyZjYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNDg5LzI0ODkwNjQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+
+    <style>
+        :root {
+            --primary: #3b82f6; --success: #10b981; --danger: #ef4444;
+            --bg: #f8fafc; --card: #ffffff; --text: #1e293b;
+            --border: #e2e8f0; --muted: #64748b; --accent: #f59e0b;
+            --input-bg: #f1f5f9;
+        }
+        [data-theme="dark"] {
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
+            --border: #334155; --muted: #94a3b8; --input-bg: #334155;
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; transition: 0.3s; }
+        .container { max-width: 1450px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; gap: 25px; }
+        
+        @media (max-width: 1150px) { .container { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+
+        .privacy-active .blur-text { filter: blur(6px); transition: 0.2s; }
+        .privacy-active .blur-text:hover { filter: blur(0); }
+
+        header {
+            grid-column: 1 / -1; background: var(--card); padding: 25px; border-radius: 16px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border);
+        }
+
+        .quick-entry-bar {
+            grid-column: 1 / -1; background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 18px 25px;
+            border-radius: 16px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+        .quick-entry-bar input { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; }
+        .quick-entry-bar input::placeholder { color: rgba(255, 255, 255, 0.75); }
+
+        .ed-panel { background: #1e293b; color: white; padding: 20px; border-radius: 16px; display: none; margin-bottom: 10px; border: 1px solid #334155; }
+        .ed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-top: 15px; }
+        .ed-stat { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .ed-stat label { display: block; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
+        .ed-stat span { font-weight: bold; font-size: 1.1rem; }
+
+        .ed-bar-bg { background: #334155; height: 14px; border-radius: 7px; margin: 15px 0; overflow: hidden; border: 1px solid #475569; }
+        .ed-bar-fill { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; transition: 0.6s ease-in-out; width: 0%; }
+
+        .section-card { background: var(--card); padding: 25px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; background: var(--input-bg); padding: 18px; border-radius: 12px; margin-bottom: 20px; }
+        
+        input, select { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 0.9rem; transition: 0.2s; height: 42px; }
+        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        ::placeholder { color: var(--muted); opacity: 1; }
+
+        input[type="date"]::before { content: attr(placeholder); color: var(--muted); width: 100%; margin-right: 0.5em; }
+        input[type="date"]:focus::before, input[type="date"]:valid::before { content: ""; width: 0%; }
+
+        input[type="checkbox"] { width: auto; height: auto; cursor: pointer; }
+
+        button { cursor: pointer; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 600; transition: 0.2s; }
+        button.primary { background: var(--primary); color: white; border: none; box-shadow: 0 2px 4px rgba(59,130,246,0.3); }
+        button.success { background: var(--success); color: white; border: none; box-shadow: 0 2px 4px rgba(16,185,129,0.3); }
+        button.danger { background: var(--danger); color: white; border: none; box-shadow: 0 2px 4px rgba(239,68,68,0.3); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 12px; border-bottom: 2px solid var(--border); }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+
+        #importModal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; 
+            backdrop-filter: blur(4px);
+        }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 20px; width: 350px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid var(--border); }
+
+        .cal-day { font-size: 0.8rem; border-radius: 8px; border: 1px solid var(--border); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--input-bg); cursor: default; position: relative; }
+        .has-event { background: rgba(59, 130, 246, 0.15); border-color: var(--primary); color: var(--primary); font-weight: bold; }
+        .is-today { background: var(--accent); color: white; border-color: var(--accent); transform: scale(1.1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; vertical-align: middle; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(18px); }
+    </style>
+</head>
+<body id="mainBody">
+
+<div class="container">
+    <header>
+        <div>
+            <h1 style="margin:0; color:var(--primary); letter-spacing: -1px;">Cuentas Claras <span style="font-size: 0.8rem; color:var(--muted); font-weight: normal;">v2.4 PWA</span></h1>
+            <div style="margin-top:10px; display:flex; gap:15px; align-items:center;">
+                <label class="switch"><input type="checkbox" id="edToggle" onchange="toggleEDMode()"><span class="slider"></span></label>
+                <span style="font-size:0.85rem; font-weight: 500;">EveryDollar Mode</span>
+                <button id="privacyBtn" onclick="togglePrivacy()" style="font-size:0.75rem">👁️ Privacidad: OFF</button>
+            </div>
+        </div>
+        <div style="text-align: center">
+            <div style="display:flex; align-items:center; gap:12px">
+                <button onclick="changeMonth(-1)">◀</button>
+                <h2 id="currentMonthLabel" style="margin:0; min-width:180px; font-weight: 800; text-transform: capitalize;"></h2>
+                <button onclick="changeMonth(1)">▶</button>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px">
+            <button onclick="toggleTheme()" style="background: var(--input-bg);">🌓</button>
+            <button onclick="openImportModal()" class="primary">📋 Clonar Anterior</button>
+            <button onclick="exportData()" style="background: var(--input-bg);">💾 Backup</button>
+        </div>
+    </header>
+
+    <div class="quick-entry-bar">
+        <strong style="font-size: 1.1rem">⚡ Quick Entry:</strong>
+        <input type="text" id="qeDesc" placeholder="¿En qué gastaste hoy?" style="flex:2">
+        <input type="number" id="qeAmount" placeholder="Monto $" style="flex:1">
+        <button class="success" onclick="addQuickExpense()" style="background: white; color: var(--success); padding: 10px 25px;">+ REGISTRAR</button>
+    </div>
+
+    <div class="main-content">
+        <div id="edPanel" class="ed-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:bold; font-size: 1.1rem;">Estado del Presupuesto</span>
+                <span id="edStatus" class="blur-text" style="background: var(--success); padding: 4px 12px; border-radius: 20px; font-size: 0.9rem;">$0 por asignar</span>
+            </div>
+            <div class="ed-bar-bg"><div id="edBar" class="ed-bar-fill"></div></div>
+            <div class="ed-grid">
+                <div class="ed-stat"><label>Ingresos</label><span id="edInc" class="blur-text">$0</span></div>
+                <div class="ed-stat"><label>Gastos</label><span id="edExp" class="blur-text">$0</span></div>
+                <div class="ed-stat"><label>Disponible</label><span id="edNet" class="blur-text">$0</span></div>
+            </div>
+        </div>
+
+        <section class="section-card" style="border-left: 5px solid var(--accent)">
+            <h3 style="margin-top:0">🛒 Gastos Diarios</h3>
+            <table>
+                <thead><tr><th width="80">Día</th><th>Concepto</th><th>Categoría</th><th>Monto</th><th width="50"></th></tr></thead>
+                <tbody id="dailyTableBody"></tbody>
+            </table>
+        </section>
+
+        <section class="section-card">
+            <h3>💳 Tarjetas de Crédito</h3>
+            <div class="grid-inputs" style="grid-template-columns: repeat(3, 1fr);">
+                <input type="text" id="ccName" placeholder="Nombre Tarjeta">
+                <input type="number" id="ccBalance" placeholder="Saldo Actual">
+                <input type="number" id="ccAPR" placeholder="APR %">
+                <input type="number" id="ccPlan" placeholder="Pago Plan">
+                <input type="date" id="ccCorte" placeholder="Fecha de Corte">
+                <input type="date" id="ccVence" placeholder="Fecha Vencimiento">
+                <input type="number" id="ccLimit" placeholder="Límite Total">
+                <input type="number" id="ccPromo" placeholder="Monto 0%">
+                <input type="date" id="ccPromoDate" placeholder="Fin Promo 0%">
+                <button class="primary" onclick="addCard()" style="grid-column: span 3;">+ Agregar Tarjeta</button>
+            </div>
+            <table>
+                <thead><tr><th>OK</th><th>Tarjeta</th><th>Saldo / Límite</th><th>Pago Plan</th><th>Vencimiento</th><th>Promo 0%</th><th></th></tr></thead>
+                <tbody id="ccTableBody"></tbody>
+            </table>
+        </section>
+    </div>
+
+    <aside class="sidebar">
+        <div class="section-card"><div id="calendarGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;"></div></div>
+        <div class="section-card"><div id="categoryChart"></div></div>
+    </aside>
+
+    <div id="importModal">
+        <div class="modal-content">
+            <h3>Clonar Mes Anterior</h3>
+            <label><input type="checkbox" id="impInc" checked> Ingresos</label>
+            <label><input type="checkbox" id="impSub" checked> Suscripciones</label>
+            <label><input type="checkbox" id="impExp" checked> Gastos Fijos</label>
+            <label><input type="checkbox" id="impCC" checked> Tarjetas</label>
+            <div style="display:flex; gap:10px; margin-top: 20px;">
+                <button class="primary" onclick="processImport()" style="flex:1">Importar</button>
+                <button onclick="closeImportModal()" style="flex:1">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Registro de Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ZW50ID0+IHsgZXZlbnQucmVzcG9uZFdpdGgoZmV0Y2goZXZlbnQucmVxdWVzdCkpOyB9KTs=')
+            .then(reg => console.log('PWA Registered'))
+            .catch(err => console.log('Error', err));
+        });
+    }
+
+    // Lógica principal (v2.3)
+    let currentDate = new Date();
+    let appData = JSON.parse(localStorage.getItem('cuentasClarasData')) || {};
+    let edMode = localStorage.getItem('edMode') === 'true';
+    let privacyMode = false;
+
+    function getMonthKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; }
+    function saveData() { localStorage.setItem('cuentasClarasData', JSON.stringify(appData)); render(); }
+    function togglePrivacy() { privacyMode = !privacyMode; document.getElementById('mainBody').classList.toggle('privacy-active', privacyMode); }
+    function toggleEDMode() { edMode = document.getElementById('edToggle').checked; localStorage.setItem('edMode', edMode); render(); }
+    function openImportModal() { document.getElementById('importModal').style.display='flex'; }
+    function closeImportModal() { document.getElementById('importModal').style.display='none'; }
+    function changeMonth(o) { currentDate.setMonth(currentDate.getMonth()+o); render(); }
+    function toggleTheme() { document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
+
+    function render() {
+        const key = getMonthKey(currentDate);
+        if (!appData[key]) appData[key] = { income:[], expenses:[], cards:[], daily:[], subs:[] };
+        const d = appData[key];
+        document.getElementById('currentMonthLabel').innerText = currentDate.toLocaleString('es', {month:'long', year:'numeric'});
+        document.getElementById('edPanel').style.display = edMode ? 'block' : 'none';
+        
+        // Tablas y cálculos (Resumido para espacio)
+        document.getElementById('dailyTableBody').innerHTML = (d.daily||[]).map((x,i)=>`<tr><td>${x.date.split('-')[2]}</td><td>${x.desc}</td><td>${x.cat}</td><td class="blur-text">$${x.amount}</td><td><button onclick="deleteItem('daily',${i})">🗑</button></td></tr>`).join('');
+        document.getElementById('ccTableBody').innerHTML = d.cards.map((x,i)=>`<tr><td><input type="checkbox" ${x.paid?'checked':''}></td><td>${x.name}</td><td class="blur-text">$${x.balance}</td><td class="blur-text">$${x.plan}</td><td>${x.vence}</td><td>${x.promo||'-'}</td><td><button onclick="deleteItem('cards',${i})">🗑</button></td></tr>`).join('');
+    }
+
+    function addQuickExpense() {
+        const key = getMonthKey(currentDate);
+        const desc = document.getElementById('qeDesc').value;
+        const amount = document.getElementById('qeAmount').value;
+        if(desc && amount) {
+            if(!appData[key].daily) appData[key].daily = [];
+            appData[key].daily.push({ date: new Date().toISOString().split('T')[0], desc, amount: parseFloat(amount), cat:'Otros' });
+            document.getElementById('qeDesc').value = ''; document.getElementById('qeAmount').value = '';
+            saveData();
+        }
+    }
+
+    function addCard() {
+        appData[getMonthKey(currentDate)].cards.push({
+            name: document.getElementById('ccName').value,
+            balance: document.getElementById('ccBalance').value,
+            plan: document.getElementById('ccPlan').value,
+            vence: document.getElementById('ccVence').value,
+            paid: false
+        });
+        saveData();
+    }
+
+    function deleteItem(type, i) { appData[getMonthKey(currentDate)][type].splice(i, 1); saveData(); }
+    
+    function exportData() {
+        const blob = new Blob([JSON.stringify(appData)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=`CuentasClaras_v2.4.json`; a.click();
+    }
+
+    render();
+</script>
+</body>
+</html>
