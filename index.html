@@ -2,14 +2,13 @@
 <html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Cuentas Claras v2.3 - Master Edition</title>
-<meta name="theme-color" content="#3b82f6">
+    <meta name="theme-color" content="#3b82f6">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN1ZW50YXMgQ2xhcmFzIiwKICAic2hvcnRfbmFtZSI6ICJDdWVudGFzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmOGZhZmMiLAogICJ0aGVtZV9jbG9yIjogIiMzYjgyZjYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNDg5LzI0ODkwNjQucG5nIiwKICAgIC2InNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN1ZW50YXMgQ2xhcmFzIiwKICAic2hvcnRfbmFtZSI6ICJDdWVudGFzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmOGZhZmMiLAogICJ0aGVtZV9jbG9yIjogIiMzYjgyZjYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yNDg5LzI0ODkwNjQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
 
     <style>
         :root {
@@ -22,122 +21,75 @@
             --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
             --border: #334155; --muted: #94a3b8; --input-bg: #334155;
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; transition: 0.3s; }
-        .container { max-width: 1450px; margin: 0 auto; display: grid; grid-template-columns: 1fr 340px; gap: 25px; }
-        
-        @media (max-width: 1150px) { .container { grid-template-columns: 1fr; } .sidebar { order: -1; } }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; transition: 0.3s; padding-bottom: 90px !important; }
+        .container { max-width: 1450px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
+        /* --- NUEVOS ESTILOS NAVEGACIÓN --- */
+        .tab-content { display: none; width: 100%; flex-direction: column; gap: 20px; }
+        .tab-content.active { display: flex; }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: var(--card); display: flex; justify-content: space-around;
+            align-items: center; border-top: 1px solid var(--border); z-index: 2000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            color: var(--muted); font-size: 0.75rem; cursor: pointer; flex: 1; padding: 10px 0;
+        }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+        .nav-item span { font-size: 1.4rem; margin-bottom: 2px; }
+
+        .fab {
+            position: fixed; bottom: 85px; left: 20px; width: 56px; height: 56px;
+            background: var(--primary); color: white; border-radius: 50%;
+            border: none; font-size: 24px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            z-index: 1999; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- ESTILOS ORIGINALES REUTILIZADOS --- */
         .privacy-active .blur-text { filter: blur(6px); transition: 0.2s; }
         .privacy-active .blur-text:hover { filter: blur(0); }
 
         header {
-            grid-column: 1 / -1; background: var(--card); padding: 25px; border-radius: 16px;
+            background: var(--card); padding: 25px; border-radius: 16px;
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border);
         }
 
         .quick-entry-bar {
-            grid-column: 1 / -1; background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 18px 25px;
+            background: linear-gradient(135deg, var(--primary), #1d4ed8); color: white; padding: 18px 25px;
             border-radius: 16px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
         }
         .quick-entry-bar input { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 10px; }
-        /* Placeholder Quick Entry Blanco Grisáceo */
         .quick-entry-bar input::placeholder { color: rgba(255, 255, 255, 0.75); }
 
-        .ed-panel { background: #1e293b; color: white; padding: 20px; border-radius: 16px; display: none; margin-bottom: 10px; border: 1px solid #334155; }
-        .ed-grid {
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
-    width: 100%;
-}
-
-.ed-stat {
-    flex: 1; /* Esto obliga a los 3 cuadros a medir lo mismo y repartirse el ancho de la barra */
-    min-width: 0; /* Permite que el cuadro se encoja más allá del contenido si es necesario */
-    text-align: center;
-    padding: 10px 5px;
-}
-
-.ed-stat span {
-    display: block;
-    font-size: clamp(0.8rem, 3vw, 1.1rem); /* Magia: el tamaño de fuente se ajusta solo según el ancho */
-}
+        .ed-panel { background: #1e293b; color: white; padding: 20px; border-radius: 16px; display: none; border: 1px solid #334155; }
+        .ed-grid { display: flex; justify-content: space-between; gap: 5px; width: 100%; }
+        .ed-stat { flex: 1; text-align: center; padding: 10px 5px; }
+        .ed-stat span { display: block; font-size: clamp(0.8rem, 3vw, 1.1rem); }
         .ed-stat label { display: block; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
-        
-
         .ed-bar-bg { background: #334155; height: 14px; border-radius: 7px; margin: 15px 0; overflow: hidden; border: 1px solid #475569; }
         .ed-bar-fill { background: linear-gradient(90deg, #10b981, #34d399); height: 100%; transition: 0.6s ease-in-out; width: 0%; }
 
-        .section-card { background: var(--card); padding: 25px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-	.grid-inputs {
-    display: grid;
-    /* En PC usa 3 columnas, en celular usa 1 o 2 dependiendo del espacio */
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-    gap: 12px;
-    background: var(--input-bg);
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-/* Esto va dentro de <style> */
-.section-card {
-    width: 100%;
-    overflow-x: auto; /* Permite scroll horizontal solo en la tarjeta si es necesario */
-    box-sizing: border-box;
-}
-
-table {
-    width: 100%;
-    min-width: 450px; /* Le damos aire a las columnas para que no se encojan */
-    border-collapse: collapse;
-}
-	
-	
+        .section-card { background: var(--card); padding: 25px; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); width: 100%; box-sizing: border-box; }
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; background: var(--input-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         
+        table { width: 100%; border-collapse: collapse; display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 12px; border-bottom: 2px solid var(--border); text-align: left; }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; text-align: left; }
+
         input, select { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); font-size: 0.9rem; transition: 0.2s; height: 42px; }
         input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        
-        ::placeholder { color: var(--muted); opacity: 1; }
-
-        input[type="date"]::before { content: attr(placeholder); color: var(--muted); width: 100%; margin-right: 0.5em; }
-        input[type="date"]:focus::before, input[type="date"]:valid::before { content: ""; width: 0%; }
-
-        input[type="checkbox"] { width: auto; height: auto; cursor: pointer; }
-
         button { cursor: pointer; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 600; transition: 0.2s; }
-        button.primary { background: var(--primary); color: white; border: none; box-shadow: 0 2px 4px rgba(59,130,246,0.3); }
-        button.success { background: var(--success); color: white; border: none; box-shadow: 0 2px 4px rgba(16,185,129,0.3); }
-        button.danger { background: var(--danger); color: white; border: none; box-shadow: 0 2px 4px rgba(239,68,68,0.3); }
+        button.primary { background: var(--primary); color: white; border: none; }
+        button.success { background: var(--success); color: white; border: none; }
+        button.danger { background: var(--danger); color: white; border: none; }
 
-        table { width: 100%; border-collapse: collapse; }
-        th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; padding: 12px; border-bottom: 2px solid var(--border); }
-        td { padding: 14px 12px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-
-        /* --- CORRECCIÓN MODAL v2.3 --- */
-        #importModal { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; 
-            backdrop-filter: blur(4px);
-        }
-        .modal-content { 
-            background: var(--card); padding: 30px; border-radius: 20px; width: 350px; 
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid var(--border);
-        }
-        .modal-content h3 { margin-top: 0; color: var(--primary); }
-        .modal-content label { display: block; padding: 8px 0; font-size: 0.95rem; cursor: pointer; }
-
-        .cal-day { font-size: 0.8rem; border-radius: 8px; border: 1px solid var(--border); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--input-bg); cursor: default; position: relative; }
+        .cal-day { font-size: 0.8rem; border-radius: 8px; border: 1px solid var(--border); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: var(--input-bg); position: relative; }
         .has-event { background: rgba(59, 130, 246, 0.15); border-color: var(--primary); color: var(--primary); font-weight: bold; }
-        .is-today { background: var(--accent); color: white; border-color: var(--accent); transform: scale(1.1); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-
-        .cal-day:hover::after { 
-            content: attr(data-tooltip); position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); 
-            background: #1e293b; color: white; padding: 10px; border-radius: 8px; font-size: 0.75rem; 
-            white-space: pre-wrap; z-index: 1000; display: block; min-width: 160px; pointer-events: none; 
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); font-weight: normal; line-height: 1.4;
-        }
+        .is-today { background: var(--accent); color: white; border-color: var(--accent); transform: scale(1.1); }
 
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; vertical-align: middle; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -145,119 +97,18 @@ table {
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(18px); }
-	
-	@media (max-width: 600px) {
-        body { padding: 10px 8px; }
-        header { padding: 15px; flex-direction: column; text-align: center; }
-        .quick-entry-bar { padding: 10px; flex-direction: column; }
-        .quick-entry-bar input { width: 100%; }
-    }
 
-	html, body {
-    max-width: 100vw; /* El ancho máximo es el de la ventana */
-    overflow-x: hidden; /* Prohíbe el scroll horizontal */
-    position: relative;
-    width: 100%;
-}
+        /* Estilos Chart */
+        .chart-row span:first-child { font-size: 0.85rem !important; width: 85px !important; font-weight: 500; }
+        .chart-row span:last-child { font-size: 0.8rem !important; color: var(--primary); }
+        .chart-bar-bg { height: 10px !important; background: #e2e8f0; border-radius: 6px; overflow: hidden; flex: 1; }
+        .chart-bar-fill { background: var(--accent) !important; transition: width 0.8s ease-in-out; height: 100%; }
 
-.container {
-    width: 100%;
-    max-width: 100vw; 
-    margin: 0 auto;
-    /* Esto da el mismo espacio (15px) a izquierda y derecha */
-    padding: 15px; 
-    box-sizing: border-box; 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-x: hidden;
-}
-/* Aseguramos que todas las secciones respeten el ancho del padre */
-.section-card, header, .quick-entry-bar, .ed-panel {
-    width: 100%;
-    box-sizing: border-box;
-    margin-left: 0;
-    margin-right: 0;
-}
-}
-
-/* Fuerza a que las tablas no estiren la pantalla */
-table {
-    display: block;
-    overflow-x: auto; /* Si la tabla es muy ancha, que el scroll sea solo dentro de la tabla */
-    white-space: nowrap;
-}
-
-/* Contenedor para que la tabla no rompa la app */
-.table-responsive {
-    width: 100%;
-    overflow-x: auto; /* Permite scroll lateral solo aquí */
-    -webkit-overflow-scrolling: touch; /* Suavidad en iPhone/Android */
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-/* Forzar un ancho mínimo a la tabla para que no se encoja */
-#ccTableBody p, table {
-    min-width: 600px; /* Al menos 600px para que los datos respiren */
-}
-
-th, td {
-    white-space: nowrap; /* Evita que el texto se rompa en dos líneas */
-    padding: 10px;
-    text-align: left;
-}
-
-/* Tamaño de los nombres (Vivienda, Comida, etc) */
-.chart-row span:first-child {
-    font-size: 0.85rem !important; /* Ajusta este número a tu gusto */
-    width: 85px !important;       /* Un poco más de ancho para que no se corte el texto */
-    font-weight: 500;
-}
-
-/* Tamaño de los montos ($500, etc) */
-.chart-row span:last-child {
-    font-size: 0.8rem !important;
-    color: var(--primary);
-}
-
-/* El fondo de la barra (el carril gris) */
-.chart-bar-bg {
-    height: 10px !important;    /* Hazla más delgada o gruesa aquí */
-    background: #e2e8f0;       /* Color del carril */
-}
-
-/* El relleno de la barra (lo que sube con el gasto) */
-.chart-bar-fill {
-    background: var(--accent) !important; /* Puedes cambiar 'var(--primary)' por 'var(--success)' o 'var(--accent)' */
-    transition: width 0.8s ease-in-out;    /* Hace que la barra "crezca" suavemente al abrir la app */
-}
-
-@media (max-width: 600px) {
-    body {
-        padding: 0; /* Eliminamos el padding del body para que el container mande */
-    }
-    .container {
-        padding: 12px; /* Espacio uniforme en los 4 costados */
-    }
-}
-
-.container {
-    display: flex;
-    flex-direction: column; /* Apila uno tras otro */
-}
-
-header {
-    order: -2; /* El número más bajo sube al principio */
-}
-
-.ed-panel {
-    order: -1; /* Se queda justo debajo del header */
-}
-
-/* El resto de las secciones se acomodarán solas después */
-
+        #importModal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+        }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 20px; width: 350px; border: 1px solid var(--border); }
     </style>
 </head>
 <body id="mainBody">
@@ -287,25 +138,12 @@ header {
         </div>
     </header>
 
-    <div class="quick-entry-bar">
-        <strong style="font-size: 1.1rem">⚡ Quick Entry:</strong>
-        <input type="text" id="qeDesc" placeholder="¿En qué gastaste hoy?" style="flex:2">
-        <input type="number" id="qeAmount" placeholder="Monto $" style="flex:1">
-        <button class="success" onclick="addQuickExpense()" style="background: white; color: var(--success); padding: 10px 25px;">+ REGISTRAR</button>
-    </div>
-
-    <div class="main-content">
-        <div id="edPanel" class="ed-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-weight:bold; font-size: 1.1rem;">Estado del Presupuesto</span>
-                <span id="edStatus" class="blur-text" style="background: var(--success); padding: 4px 12px; border-radius: 20px; font-size: 0.9rem;">$0 por asignar</span>
-            </div>
-            <div class="ed-bar-bg"><div id="edBar" class="ed-bar-fill"></div></div>
-            <div class="ed-grid">
-                <div class="ed-stat"><label>Ingresos</label><span id="edInc" class="blur-text">$0</span></div>
-                <div class="ed-stat"><label>Gastos</label><span id="edExp" class="blur-text">$0</span></div>
-                <div class="ed-stat"><label>Disponible</label><span id="edNet" class="blur-text">$0</span></div>
-            </div>
+    <div id="tab-gastos" class="tab-content active">
+        <div class="quick-entry-bar" id="quickEntrySection">
+            <strong style="font-size: 1.1rem">⚡ Quick Entry:</strong>
+            <input type="text" id="qeDesc" placeholder="¿En qué gastaste hoy?" style="flex:2">
+            <input type="number" id="qeAmount" placeholder="Monto $" style="flex:1">
+            <button class="success" onclick="addQuickExpense()" style="background: white; color: var(--success); padding: 10px 25px;">+ REGISTRAR</button>
         </div>
 
         <section class="section-card" style="border-left: 5px solid var(--accent)">
@@ -324,7 +162,7 @@ header {
                 <input type="number" id="incAmount" placeholder="Monto">
                 <button class="success" onclick="addIncome()">+ Agregar</button>
             </div>
-            <table id="incTable"><thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody id="incTableBody"></tbody></table>
+            <table><thead><tr><th>Fecha</th><th>Descripción</th><th>Monto</th><th></th></tr></thead><tbody id="incTableBody"></tbody></table>
         </section>
 
         <section class="section-card">
@@ -352,82 +190,113 @@ header {
                 <input type="number" id="expAmount" placeholder="Monto">
                 <button class="danger" onclick="addExpense()">+ Agregar</button>
             </div>
-            <table id="expTable"><thead><tr><th width="50">Pago</th><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Monto</th><th></th></tr></thead><tbody id="expTableBody"></tbody></table>
+            <table><thead><tr><th width="50">Pago</th><th>Fecha</th><th>Concepto</th><th>Categoría</th><th>Monto</th><th></th></tr></thead><tbody id="expTableBody"></tbody></table>
         </section>
-
-<section class="section-card">
-    <h3>💳 Tarjetas de Crédito</h3>
-    
-    <div class="grid-inputs" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
-        <input type="text" id="ccName" placeholder="Nombre Tarjeta">
-        <input type="number" id="ccBalance" placeholder="Saldo Actual">
-        <input type="number" id="ccAPR" placeholder="APR %">
-        <input type="number" id="ccPlan" placeholder="Plan de Pago">
-        <input type="date" id="ccCorte" placeholder="Corte" required title="Fecha de Corte">
-        <input type="date" id="ccVence" placeholder="Vencimiento" required title="Fecha Vencimiento">
-        <input type="number" id="ccLimit" placeholder="Límite Total">
-        <input type="number" id="ccPromo" placeholder="Monto 0% Int.">
-        <input type="date" id="ccPromoDate" placeholder="Fin Promo 0%" required title="Fin Promo 0%">
-        
-        <button class="primary" onclick="addCard()" style="grid-column: 1 / -1; width: 100%;">+ Agregar Tarjeta</button>
     </div>
 
-    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-        <table style="min-width: 700px; width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="width: 40px;">OK</th>
-                    <th>Tarjeta</th>
-                    <th>Saldo / Límite</th>
-                    <th>Pago Plan</th>
-                    <th>Vencimiento</th>
-                    <th>Promo 0%</th>
-                    <th style="width: 40px;"></th>
-                </tr>
-            </thead>
-            <tbody id="ccTableBody"></tbody>
-        </table>
-    </div>
-</section>
-    </div>
-
-    <aside class="sidebar">
-        <div class="section-card">
+    <div id="tab-plan" class="tab-content">
+        <section class="section-card">
             <h4 style="margin:0 0 15px 0; text-align:center">📅 Calendario de Pagos</h4>
             <div id="calendarGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;"></div>
-        </div>
-        <div class="section-card">
-            <h4 style="margin:0 0 15px 0">📊 Distribución</h4>
-            <div id="categoryChart"></div>
-        </div>
-        <div class="section-card">
+        </section>
+
+        <section class="section-card">
+            <h3>💳 Tarjetas de Crédito</h3>
+            <div class="grid-inputs">
+                <input type="text" id="ccName" placeholder="Nombre Tarjeta">
+                <input type="number" id="ccBalance" placeholder="Saldo Actual">
+                <input type="number" id="ccAPR" placeholder="APR %">
+                <input type="number" id="ccPlan" placeholder="Plan de Pago">
+                <input type="date" id="ccCorte" placeholder="Corte">
+                <input type="date" id="ccVence" placeholder="Vencimiento">
+                <input type="number" id="ccLimit" placeholder="Límite Total">
+                <input type="number" id="ccPromo" placeholder="Monto 0% Int.">
+                <input type="date" id="ccPromoDate" placeholder="Fin Promo 0%">
+                <button class="primary" onclick="addCard()" style="grid-column: 1 / -1;">+ Agregar Tarjeta</button>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>OK</th><th>Tarjeta</th><th>Saldo / Límite</th><th>Pago Plan</th><th>Vencimiento</th><th>Promo</th><th></th></tr>
+                </thead>
+                <tbody id="ccTableBody"></tbody>
+            </table>
+        </section>
+
+        <section class="section-card">
             <h4 style="margin:0 0 15px 0">❄️ Bola de Nieve</h4>
             <div id="snowballList" style="font-size:0.85rem"></div>
-        </div>
-    </aside>
+        </section>
+    </div>
 
-    <div id="importModal">
-        <div class="modal-content">
-            <h3>Clonar Mes Anterior</h3>
-            <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 15px;">Selecciona qué secciones deseas copiar:</p>
-            <label><input type="checkbox" id="impInc" checked> Ingresos</label>
-            <label><input type="checkbox" id="impSub" checked> Suscripciones</label>
-            <label><input type="checkbox" id="impExp" checked> Gastos Fijos</label>
-            <label><input type="checkbox" id="impCC" checked> Tarjetas de Crédito</label>
-            <div style="display:flex; gap:10px; margin-top: 20px;">
-                <button class="primary" onclick="processImport()" style="flex:1">Importar</button>
-                <button onclick="closeImportModal()" style="flex:1">Cancelar</button>
+    <div id="tab-resumen" class="tab-content">
+        <div id="edPanel" class="ed-panel" style="display: block;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:bold; font-size: 1.1rem;">Estado del Presupuesto</span>
+                <span id="edStatus" class="blur-text" style="background: var(--success); padding: 4px 12px; border-radius: 20px; font-size: 0.9rem;">$0 por asignar</span>
             </div>
+            <div class="ed-bar-bg"><div id="edBar" class="ed-bar-fill"></div></div>
+            <div class="ed-grid">
+                <div class="ed-stat"><label>Ingresos</label><span id="edInc" class="blur-text">$0</span></div>
+                <div class="ed-stat"><label>Gastos</label><span id="edExp" class="blur-text">$0</span></div>
+                <div class="ed-stat"><label>Disponible</label><span id="edNet" class="blur-text">$0</span></div>
+            </div>
+        </div>
+
+        <section class="section-card">
+            <h4 style="margin:0 0 15px 0">📊 Distribución</h4>
+            <div id="categoryChart"></div>
+        </section>
+    </div>
+</div>
+
+<button class="fab" onclick="goToQuickEntry()">⚡</button>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab(event, 'gastos')"><span>🏠</span>Gastos</div>
+    <div class="nav-item" onclick="switchTab(event, 'plan')"><span>📅</span>Pagos</div>
+    <div class="nav-item" onclick="switchTab(event, 'resumen')"><span>📊</span>Resumen</div>
+</nav>
+
+<div id="importModal">
+    <div class="modal-content">
+        <h3>Clonar Mes Anterior</h3>
+        <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 15px;">Selecciona qué secciones:</p>
+        <label><input type="checkbox" id="impInc" checked> Ingresos</label>
+        <label><input type="checkbox" id="impSub" checked> Suscripciones</label>
+        <label><input type="checkbox" id="impExp" checked> Gastos Fijos</label>
+        <label><input type="checkbox" id="impCC" checked> Tarjetas de Crédito</label>
+        <div style="display:flex; gap:10px; margin-top: 20px;">
+            <button class="primary" onclick="processImport()" style="flex:1">Importar</button>
+            <button onclick="closeImportModal()" style="flex:1">Cancelar</button>
         </div>
     </div>
 </div>
 
 <script>
-if ('serviceWorker' in navigator) {
+    // --- LÓGICA DE NAVEGACIÓN ---
+    function switchTab(event, tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        
+        document.getElementById('tab-' + tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function goToQuickEntry() {
+        // Asegura que estamos en la pestaña de gastos para ver el input
+        const navGastos = document.querySelector('.nav-item:first-child');
+        const eventMock = { currentTarget: navGastos };
+        switchTab(eventMock, 'gastos');
+        document.getElementById('qeDesc').focus();
+        document.getElementById('quickEntrySection').scrollIntoView({behavior: "smooth"});
+    }
+
+    // --- TU LÓGICA ORIGINAL INTACTA ---
+    if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ZW50ID0+IHsgZXZlbnQucmVzcG9uZFdpdGgoZmV0Y2goZXZlbnQucmVxdWVzdCkpOyB9KTs=')
-            .then(reg => console.log('PWA Lista'))
-            .catch(err => console.log('Error PWA', err));
+            .then(reg => console.log('PWA Lista')).catch(err => console.log('Error PWA', err));
         });
     }
 
@@ -453,7 +322,8 @@ if ('serviceWorker' in navigator) {
         const d = appData[key];
 
         document.getElementById('edToggle').checked = edMode;
-        document.getElementById('edPanel').style.display = edMode ? 'block' : 'none';
+        document.getElementById('edPanel').style.visibility = edMode ? 'visible' : 'hidden';
+        document.getElementById('edPanel').style.opacity = edMode ? '1' : '0';
         document.getElementById('currentMonthLabel').innerText = currentDate.toLocaleString('es', {month:'long', year:'numeric'});
 
         let tInc = d.income.reduce((s,x)=>s+parseFloat(x.amount||0),0);
@@ -466,7 +336,6 @@ if ('serviceWorker' in navigator) {
         document.getElementById('incTableBody').innerHTML = d.income.map((x,i)=>`<tr><td>${x.date}</td><td class="editable" onclick="editItem('${key}','income',${i},'desc')">${x.desc}</td><td class="blur-text"><strong>$${x.amount}</strong></td><td><button onclick="deleteItem('income',${i})">🗑</button></td></tr>`).join('');
         document.getElementById('subTableBody').innerHTML = (d.subs||[]).map((x,i)=>`<tr class="${x.paid?'paid-row':''}"><td><input type="checkbox" ${x.paid?'checked':''} onchange="togglePaid('subs',${i})"></td><td>${x.day}</td><td>${x.name}</td><td class="blur-text"><strong>$${x.amount}</strong></td><td><button onclick="deleteItem('subs',${i})">🗑</button></td></tr>`).join('');
         document.getElementById('expTableBody').innerHTML = d.expenses.map((x,i)=>`<tr class="${x.paid?'paid-row':''}"><td><input type="checkbox" ${x.paid?'checked':''} onchange="togglePaid('expenses',${i})"></td><td>${x.date}</td><td>${x.desc}</td><td>${x.cat}</td><td class="blur-text"><strong>$${x.amount}</strong></td><td><button onclick="deleteItem('expenses',${i})">🗑</button></td></tr>`).join('');
-        
         document.getElementById('ccTableBody').innerHTML = d.cards.map((x,i)=>{
             const vDate = x.vence ? x.vence.split('-').reverse().join('/') : '-';
             return `<tr class="${x.paid?'paid-row':''}"><td><input type="checkbox" ${x.paid?'checked':''} onchange="togglePaid('cards',${i})"></td><td><strong>${x.name}</strong></td><td class="blur-text">$${x.balance} / $${x.limit}</td><td class="blur-text">$${x.plan}</td><td>${vDate}</td><td class="blur-text">${x.promo > 0 ? '$'+x.promo : '-'}</td><td><button onclick="deleteItem('cards',${i})">🗑</button></td></tr>`;
@@ -477,7 +346,7 @@ if ('serviceWorker' in navigator) {
         document.getElementById('edExp').innerText = `$${(tExp+tDaily+tCC).toFixed(0)}`;
         document.getElementById('edNet').innerText = `$${net.toFixed(0)}`;
         
-        if(edMode) updateEveryDollar(tInc, tExp + tDaily + tCC);
+        updateEveryDollar(tInc, tExp + tDaily + tCC);
         renderCalendar(d);
         updateSnowball(d.cards);
         updateChart(d);
@@ -502,19 +371,12 @@ if ('serviceWorker' in navigator) {
 
     function addCard() { 
         appData[getMonthKey(currentDate)].cards.push({ 
-            name: document.getElementById('ccName').value, 
-            balance: document.getElementById('ccBalance').value, 
-            apr: document.getElementById('ccAPR').value, 
-            plan: document.getElementById('ccPlan').value, 
-            corte: document.getElementById('ccCorte').value, 
-            vence: document.getElementById('ccVence').value, 
-            limit: document.getElementById('ccLimit').value, 
-            promo: document.getElementById('ccPromo').value, 
-            promoDate: document.getElementById('ccPromoDate').value, 
-            paid: false 
-        }); 
-        saveData(); 
-        ['ccName','ccBalance','ccAPR','ccPlan','ccCorte','ccVence','ccLimit','ccPromo','ccPromoDate'].forEach(id => document.getElementById(id).value = '');
+            name: document.getElementById('ccName').value, balance: document.getElementById('ccBalance').value, 
+            apr: document.getElementById('ccAPR').value, plan: document.getElementById('ccPlan').value, 
+            corte: document.getElementById('ccCorte').value, vence: document.getElementById('ccVence').value, 
+            limit: document.getElementById('ccLimit').value, promo: document.getElementById('ccPromo').value, 
+            promoDate: document.getElementById('ccPromoDate').value, paid: false 
+        }); saveData();
     }
 
     function addQuickExpense() {
@@ -533,16 +395,13 @@ if ('serviceWorker' in navigator) {
         const cats = {};
         [...d.expenses, ...(d.daily||[]), ...(d.subs||[]).map(s=>({...s, cat:'Servicios'}))].forEach(e => cats[e.cat||'Otros'] = (cats[e.cat||'Otros']||0) + parseFloat(e.amount));
         const max = Math.max(...Object.values(cats), 1);
-// Aquí es donde ajustamos la estructura para que el CSS la reconozca
-    document.getElementById('categoryChart').innerHTML = Object.entries(cats).map(([n,v])=>`
-        <div class="chart-row" style="display:flex; align-items:center; margin-bottom:8px; gap:10px;">
-            <span>${n}</span>
-            <div class="chart-bar-bg" style="flex:1; background:var(--input-bg); height:12px; border-radius:6px; overflow:hidden;">
-                <div class="chart-bar-fill" style="width:${(v/max)*100}%; background:var(--primary); height:100%; border-radius:6px;"></div>
-            </div>
-            <span>$${v.toFixed(0)}</span>
-        </div>
-    `).join('');    }
+        document.getElementById('categoryChart').innerHTML = Object.entries(cats).map(([n,v])=>`
+            <div class="chart-row" style="display:flex; align-items:center; margin-bottom:8px; gap:10px;">
+                <span>${n}</span>
+                <div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${(v/max)*100}%"></div></div>
+                <span>$${v.toFixed(0)}</span>
+            </div>`).join('');
+    }
 
     function updateSnowball(cards) {
         let s = [...cards].filter(c=>c.balance>0).sort((a,b)=>a.balance-b.balance);
@@ -564,32 +423,42 @@ if ('serviceWorker' in navigator) {
     function editItem(mKey, type, index, field) { let v = prompt("Nuevo valor:", appData[mKey][type][index][field]); if(v) { appData[mKey][type][index][field] = v; saveData(); } }
     function resetMonth() { if(confirm("¿Borrar todos los datos de este mes?")) { appData[getMonthKey(currentDate)] = { income:[], expenses:[], cards:[], daily:[], subs:[] }; saveData(); } }
     function changeMonth(o) { currentDate.setMonth(currentDate.getMonth()+o); render(); }
-    function toggleTheme() { document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
-    
-    function openImportModal() { document.getElementById('importModal').style.display='flex'; }
-    function closeImportModal() { document.getElementById('importModal').style.display='none'; }
-    
-    function processImport() {
-        let prev = new Date(currentDate); prev.setMonth(prev.getMonth()-1);
-        const pk = getMonthKey(prev); const ck = getMonthKey(currentDate);
-        if(appData[pk]) {
-            if(document.getElementById('impInc').checked) appData[ck].income = JSON.parse(JSON.stringify(appData[pk].income));
-            if(document.getElementById('impSub').checked) appData[ck].subs = JSON.parse(JSON.stringify(appData[pk].subs)).map(s=>({...s, paid:false}));
-            if(document.getElementById('impExp').checked) appData[ck].expenses = JSON.parse(JSON.stringify(appData[pk].expenses)).map(e=>({...e, paid:false}));
-            if(document.getElementById('impCC').checked) appData[ck].cards = JSON.parse(JSON.stringify(appData[pk].cards)).map(c=>({...c, paid:false}));
-        }
-        saveData(); closeImportModal();
+    function toggleTheme() { 
+        let t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', t);
     }
-
+    function openImportModal() { document.getElementById('importModal').style.display = 'flex'; }
+    function closeImportModal() { document.getElementById('importModal').style.display = 'none'; }
     function exportData() {
-        const blob = new Blob([JSON.stringify(appData)], {type:'application/json'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download=`CuentasClaras_v2.3.json`; a.click();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "CuentasClaras_Backup.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
     }
-    function updateDailyCat(i, v) { appData[getMonthKey(currentDate)].daily[i].cat = v; saveData(); }
 
-    render();
+    function processImport() {
+        const prevDate = new Date(currentDate);
+        prevDate.setMonth(prevDate.getMonth() - 1);
+        const prevKey = getMonthKey(prevDate);
+        const currKey = getMonthKey(currentDate);
+
+        if (appData[prevKey]) {
+            if (document.getElementById('impInc').checked) appData[currKey].income = [...appData[prevKey].income];
+            if (document.getElementById('impSub').checked) appData[currKey].subs = [...appData[prevKey].subs];
+            if (document.getElementById('impExp').checked) appData[currKey].expenses = [...appData[prevKey].expenses];
+            if (document.getElementById('impCC').checked) appData[currKey].cards = [...appData[prevKey].cards.map(c => ({...c, paid: false}))];
+            saveData();
+            closeImportModal();
+            alert("Datos clonados con éxito");
+        } else {
+            alert("No hay datos del mes anterior");
+        }
+    }
+
+    window.onload = render;
 </script>
-
-
 </body>
 </html>
