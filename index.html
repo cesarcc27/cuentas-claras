@@ -295,6 +295,7 @@
         border: none;
       }
 
+      /* Contenedor del día para que el tooltip se posicione respecto a él */
       .cal-day {
         font-size: 0.8rem;
         border-radius: 8px;
@@ -306,6 +307,42 @@
         background: var(--input-bg);
         position: relative;
       }
+
+      /* El mensaje flotante (Tooltip) */
+      .cal-day[data-tooltip]:hover::after {
+        content: attr(
+          data-tooltip
+        ); /* Toma el texto del atributo data-tooltip */
+        position: absolute;
+        bottom: 120%; /* Lo pone arriba del número */
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e293b; /* Color oscuro profesional */
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        white-space: pre; /* Respeta los saltos de línea */
+        z-index: 1000;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        pointer-events: none; /* Para que no estorbe al clickear */
+        border: 1px solid var(--primary);
+        width: max-content;
+        max-width: 150px;
+      }
+
+      /* La flechita del mensaje flotante */
+      .cal-day[data-tooltip]:hover::before {
+        content: "";
+        position: absolute;
+        bottom: 110%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: #1e293b;
+        z-index: 1000;
+      }
+
       .has-event {
         background: rgba(59, 130, 246, 0.15);
         border-color: var(--primary);
@@ -900,39 +937,77 @@
         grid.innerHTML = ["D", "L", "M", "M", "J", "V", "S"]
           .map(
             (d) =>
-              `<div style="font-size:0.6rem; color:var(--muted); font-weight:bold">${d}</div>`,
+              `<div style="font-size:0.6rem; color:var(--muted); font-weight:bold; text-align:center">${d}</div>`,
           )
           .join("");
+
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const firstDay = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
+
         const events = {};
-        data.expenses.forEach((e) => {
-          const d = new Date(e.date + "T12:00:00").getDate();
-          if (!events[d]) events[d] = [];
-          events[d].push(`💸 ${e.desc}: $${e.amount}`);
-        });
-        data.cards.forEach((c) => {
-          if (c.vence) {
-            const d = new Date(c.vence + "T12:00:00").getDate();
-            if (!events[d]) events[d] = [];
-            events[d].push(`💳 ${c.name}: $${c.plan}`);
+
+        // --- FUNCIÓN INTERNA PARA EXTRAER EL DÍA SEGURO ---
+        const getSafeDay = (dateStr) => {
+          if (!dateStr) return null;
+          // Si la fecha viene como "2026-02-19", sacamos el 19
+          const parts = dateStr.split("-");
+          if (parts.length === 3) return parseInt(parts[2]);
+          // Si ya es un número (como en las suscripciones)
+          return parseInt(dateStr);
+        };
+
+        // 1. Procesar Gastos Fijos
+        (data.expenses || []).forEach((e) => {
+          const day = getSafeDay(e.date);
+          if (day) {
+            if (!events[day]) events[day] = [];
+            events[day].push(`💸 ${e.desc}`);
           }
         });
-        (data.subs || []).forEach((s) => {
-          const d = parseInt(s.day);
-          if (!events[d]) events[d] = [];
-          events[d].push(`📺 ${s.name}: $${s.amount}`);
+
+        // 2. Procesar Tarjetas
+        (data.cards || []).forEach((c) => {
+          const day = getSafeDay(c.vence);
+          if (day) {
+            if (!events[day]) events[day] = [];
+            events[day].push(`💳 ${c.name}`);
+          }
         });
+
+        // 3. Procesar Suscripciones
+        (data.subs || []).forEach((s) => {
+          const day = getSafeDay(s.day);
+          if (day) {
+            if (!events[day]) events[day] = [];
+            events[day].push(`📺 ${s.name}`);
+          }
+        });
+
         for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div></div>`;
+
+        // ... (dentro del bucle de los días en renderCalendar)
         for (let d = 1; d <= daysInMonth; d++) {
           const hasE = events[d] ? "has-event" : "";
           const isT =
-            d === new Date().getDate() && month === new Date().getMonth()
+            d === new Date().getDate() &&
+            month === new Date().getMonth() &&
+            year === new Date().getFullYear()
               ? "is-today"
               : "";
-          grid.innerHTML += `<div class="cal-day ${hasE} ${isT}" data-tooltip="${events[d] ? events[d].join("\n") : ""}">${d}</div>`;
+
+          // Generamos el texto con saltos de línea para el tooltip personalizado
+          const tooltipText = events[d] ? events[d].join("\n") : "";
+
+          // Si tiene eventos, le ponemos el atributo data-tooltip, si no, vacío
+          const tooltipAttr = events[d] ? `data-tooltip="${tooltipText}"` : "";
+
+          grid.innerHTML += `
+        <div class="cal-day ${hasE} ${isT}" ${tooltipAttr} style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <span style="font-weight: bold;">${d}</span>
+            ${events[d] ? `<span style="font-size: 0.4rem;">●</span>` : ""}
+        </div>`;
         }
       }
 
