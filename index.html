@@ -141,6 +141,12 @@
         border: 1px solid var(--border);
       }
 
+      .app-header {
+        position: sticky;
+        top: 8px;
+        z-index: 1900;
+      }
+
       .quick-entry-bar {
         background: linear-gradient(35deg, var(--primary), #1d4ed8);
         color: white;
@@ -444,7 +450,7 @@
   </head>
   <body id="mainBody">
     <div class="container">
-      <header>
+      <header class="app-header">
         <div>
           <h1 style="margin: 0; color: var(--primary); letter-spacing: -1px">
             Cuentas Claras
