@@ -46,6 +46,7 @@
         color: var(--text);
         margin: 0;
         padding: 20px;
+        padding-top: 220px;
         transition: 0.3s;
         padding-bottom: 90px !important;
       }
@@ -128,17 +129,74 @@
         filter: blur(0);
       }
 
-      header {
+      .app-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2100;
+        padding: 8px 12px 10px;
+        box-sizing: border-box;
+        backdrop-filter: blur(8px);
+      }
+
+      .app-header-inner {
+        max-width: 1450px;
+        margin: 0 auto;
         background: var(--card);
-        padding: 25px;
-        border-radius: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .app-title {
+        margin: 0;
+        text-align: center;
+        color: var(--primary);
+        letter-spacing: -0.5px;
+        font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      }
+
+      .app-title span {
+        font-size: 0.78rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .month-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .month-nav button {
+        min-width: 34px;
+        padding: 6px 8px;
+      }
+
+      .top-actions {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .top-icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
+        font-size: 1rem;
+        border-radius: 10px;
+      }
+
+      .top-icon-btn.active {
+        background: var(--primary);
+        color: #fff;
       }
 
       .app-header {
@@ -451,6 +509,11 @@
   <body id="mainBody">
     <div class="container">
       <header class="app-header">
+        <div class="app-header-inner">
+          <h1 class="app-title">Cuentas Claras <span>v2.3</span></h1>
+
+          <div class="month-nav">
+            <button onclick="changeMonth(-1)" aria-label="Mes anterior">◀</button>
         <div>
           <h1 style="margin: 0; color: var(--primary); letter-spacing: -1px">
             Cuentas Claras
@@ -497,35 +560,23 @@
               style="
                 margin: 0;
                 min-width: 180px;
+                text-align: center;
                 font-weight: 800;
                 text-transform: capitalize;
+                font-size: clamp(1rem, 2.8vw, 1.2rem);
               "
             ></h2>
-            <button onclick="changeMonth(1)">▶</button>
+            <button onclick="changeMonth(1)" aria-label="Mes siguiente">▶</button>
           </div>
-          <button
-            onclick="resetMonth()"
-            class="danger"
-            style="
-              margin-top: 10px;
-              padding: 4px 12px;
-              font-size: 0.95rem;
-              opacity: 1;
-            "
-          >
-            Borrar Datos Del Mes
-          </button>
-        </div>
-        <div style="display: flex; gap: 10px">
-          <button onclick="toggleTheme()" style="background: var(--input-bg)">
-            🌓
-          </button>
-          <button onclick="openImportModal()" class="primary">
-            📋 Clonar Anterior
-          </button>
-          <button onclick="exportData()" style="background: var(--input-bg)">
-            💾 Backup
-          </button>
+
+          <div class="top-actions">
+            <button id="edModeBtn" class="top-icon-btn" onclick="toggleEDMode()" title="EveryDollar Mode" aria-label="EveryDollar Mode">💵</button>
+            <button id="privacyBtn" class="top-icon-btn" onclick="togglePrivacy()" title="Privacidad OFF" aria-label="Privacidad">👁️</button>
+            <button class="top-icon-btn" onclick="toggleTheme()" title="Tema claro/oscuro" aria-label="Tema">🌓</button>
+            <button class="top-icon-btn" onclick="openImportModal()" title="Clonar anterior" aria-label="Clonar anterior">📋</button>
+            <button class="top-icon-btn" onclick="exportData()" title="Backup" aria-label="Backup">💾</button>
+            <button class="top-icon-btn danger" onclick="resetMonth()" title="Borrar datos del mes" aria-label="Borrar datos del mes">🗑️</button>
+          </div>
         </div>
       </header>
 
@@ -893,13 +944,14 @@
         document
           .getElementById("mainBody")
           .classList.toggle("privacy-active", privacyMode);
-        document.getElementById("privacyBtn").innerText = privacyMode
-          ? "👁️ Privacidad: ON"
-          : "👁️ Privacidad: OFF";
+
+        const privacyBtn = document.getElementById("privacyBtn");
+        privacyBtn.classList.toggle("active", privacyMode);
+        privacyBtn.title = privacyMode ? "Privacidad ON" : "Privacidad OFF";
       }
 
       function toggleEDMode() {
-        edMode = document.getElementById("edToggle").checked;
+        edMode = !edMode;
         localStorage.setItem("edMode", edMode);
         render();
       }
@@ -909,11 +961,15 @@
         ensureMonthData(key);
         const d = appData[key];
 
-        document.getElementById("edToggle").checked = edMode;
+        document.getElementById("edModeBtn").classList.toggle("active", edMode);
         document.getElementById("edPanel").style.visibility = edMode
           ? "visible"
           : "hidden";
         document.getElementById("edPanel").style.opacity = edMode ? "1" : "0";
+        document.getElementById("privacyBtn").classList.toggle("active", privacyMode);
+        document.getElementById("privacyBtn").title = privacyMode
+          ? "Privacidad ON"
+          : "Privacidad OFF";
         document.getElementById("currentMonthLabel").innerText =
           currentDate.toLocaleString("es", { month: "long", year: "numeric" });
 
