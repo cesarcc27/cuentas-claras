@@ -199,6 +199,12 @@
         color: #fff;
       }
 
+      .app-header {
+        position: sticky;
+        top: 8px;
+        z-index: 1900;
+      }
+
       .quick-entry-bar {
         background: linear-gradient(35deg, var(--primary), #1d4ed8);
         color: white;
@@ -508,6 +514,47 @@
 
           <div class="month-nav">
             <button onclick="changeMonth(-1)" aria-label="Mes anterior">◀</button>
+        <div>
+          <h1 style="margin: 0; color: var(--primary); letter-spacing: -1px">
+            Cuentas Claras
+            <span
+              style="
+                font-size: 0.8rem;
+                color: var(--muted);
+                font-weight: normal;
+              "
+              >v2.3</span
+            >
+          </h1>
+          <div
+            style="
+              margin-top: 10px;
+              display: flex;
+              gap: 15px;
+              align-items: center;
+            "
+          >
+            <label class="switch"
+              ><input
+                type="checkbox"
+                id="edToggle"
+                onchange="toggleEDMode()" /><span class="slider"></span
+            ></label>
+            <span style="font-size: 0.85rem; font-weight: 500"
+              >EveryDollar Mode</span
+            >
+            <button
+              id="privacyBtn"
+              onclick="togglePrivacy()"
+              style="font-size: 0.8rem"
+            >
+              👁️ Privacidad: OFF
+            </button>
+          </div>
+        </div>
+        <div style="text-align: center">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <button onclick="changeMonth(-1)">◀</button>
             <h2
               id="currentMonthLabel"
               style="
