@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -152,6 +152,46 @@
         padding: 10px 12px;
         display: flex;
         flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2100;
+        padding: 8px 12px 10px;
+        box-sizing: border-box;
+        backdrop-filter: blur(8px);
+      }
+
+      .app-header-inner {
+        max-width: 1450px;
+        margin: 0 auto;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .app-title {
+        margin: 0;
+        text-align: center;
+        color: var(--primary);
+        letter-spacing: -0.5px;
+        font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      }
+
+      .app-title span {
+        font-size: 0.78rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .month-nav {
+        display: flex;
+        justify-content: center;
         align-items: center;
         gap: 8px;
       }
@@ -191,6 +231,8 @@
         grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 8px;
         justify-items: center;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 8px;
       }
 
       .top-icon-btn {
@@ -206,6 +248,12 @@
       .top-icon-btn.active {
         background: var(--primary);
         color: #fff;
+      }
+
+      .app-header {
+        position: sticky;
+        top: 8px;
+        z-index: 1900;
       }
 
       .quick-entry-bar {
@@ -476,6 +524,47 @@
 
           <div class="month-nav">
             <button onclick="changeMonth(-1)" aria-label="Mes anterior">◀</button>
+        <div>
+          <h1 style="margin: 0; color: var(--primary); letter-spacing: -1px">
+            Cuentas Claras
+            <span
+              style="
+                font-size: 0.8rem;
+                color: var(--muted);
+                font-weight: normal;
+              "
+              >v2.3</span
+            >
+          </h1>
+          <div
+            style="
+              margin-top: 10px;
+              display: flex;
+              gap: 15px;
+              align-items: center;
+            "
+          >
+            <label class="switch"
+              ><input
+                type="checkbox"
+                id="edToggle"
+                onchange="toggleEDMode()" /><span class="slider"></span
+            ></label>
+            <span style="font-size: 0.85rem; font-weight: 500"
+              >EveryDollar Mode</span
+            >
+            <button
+              id="privacyBtn"
+              onclick="togglePrivacy()"
+              style="font-size: 0.8rem"
+            >
+              👁️ Privacidad: OFF
+            </button>
+          </div>
+        </div>
+        <div style="text-align: center">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <button onclick="changeMonth(-1)">◀</button>
             <h2
               id="currentMonthLabel"
               style="
