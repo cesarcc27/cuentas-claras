@@ -53,7 +53,7 @@
       }
       .container {
         max-width: 1450px;
-        margin: -50px auto;
+        margin: -95px auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -148,7 +148,8 @@
       .app-header-inner {
         max-width: 1050px;
         margin: -10px auto;
-        background: linear-gradient(1deg, var(--card), #1d4ed8);
+        background: linear-gradient(1deg, var(--primary), #1d4ed8);
+        background: var(--card);
         border: 0px solid var(--border);
         border-radius: 1px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
@@ -163,7 +164,7 @@
         text-align: center;
         color: var(--primary);
         letter-spacing: -0.5px;
-        font-size: clamp(2rem, 2.5vw, 1.6rem);
+        font-size: clamp(1.5rem, 2.5vw, 1.6rem);
       }
 
       .app-title span {
@@ -491,13 +492,17 @@
         width: 350px;
         border: 1px solid var(--border);
       }
+
+      #quickEntrySection {
+  scroll-margin-top: 15px; /* ajusta según la altura del tab/header */
+      }
     </style>
   </head>
   <body id="mainBody">
     <div class="container">
       <header class="app-header">
         <div class="app-header-inner">
-          <h1 class="app-title">Cuentas Claras <span>v2.3</span></h1>
+          <!--<h1 class="app-title">Cuentas Claras <span>v2.3</span></h1> -->
             
         <div>
 
