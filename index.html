@@ -130,23 +130,25 @@
       }
 
       .app-header {
-        position: fixed;
+        position: fixed !important;
         top: 0;
         left: 0;
+        right: 0;
         width: 100%;
         z-index: 2100;
-        padding: 8px 12px 10px;
+        padding: 0;
         box-sizing: border-box;
-        backdrop-filter: blur(8px);
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
       }
 
       .app-header-inner {
         max-width: 1450px;
         margin: 0 auto;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
         padding: 10px 12px;
         display: flex;
         flex-direction: column;
