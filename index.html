@@ -54,6 +54,7 @@
       .container {
         max-width: 1450px;
         margin: -95px auto;
+        margin-bottom: auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -314,11 +315,11 @@
       .grid-inputs {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
+        gap: 4px;
         background: var(--input-bg);
         padding: 15px;
         border-radius: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       }
 
       table {
@@ -591,7 +592,7 @@
         </section>
 
         <section class="section-card">
-          <h3>💰 Ingresos del Mes</h3>
+          <h3 style="margin-top: 0">💰 Ingresos del Mes</h3>
           <div class="grid-inputs">
             <input type="date" id="incDate" />
             <input type="text" id="incDesc" placeholder="Descripción" />
@@ -612,7 +613,7 @@
         </section>
 
         <section class="section-card">
-          <h3>📺 Suscripciones y Recurrentes</h3>
+          <h3 style="margin-top: 0">📺 Suscripciones y Recurrentes</h3>
           <div class="grid-inputs">
             <input type="text" id="subName" placeholder="Servicio" />
             <input type="number" id="subAmount" placeholder="Monto" />
@@ -636,7 +637,7 @@
         </section>
 
         <section class="section-card">
-          <h3>💸 Facturas y Gastos Fijos</h3>
+          <h3 style="margin-top: 0">💸 Facturas y Gastos Fijos</h3>
           <div class="grid-inputs">
             <input type="date" id="expDate" />
             <input type="text" id="expDesc" placeholder="Concepto" />
@@ -681,7 +682,7 @@
         </section>
 
         <section class="section-card">
-          <h3>💳 Tarjetas de Crédito</h3>
+          <h3 style="margin-top: 0">💳 Tarjetas de Crédito</h3>
           <div class="grid-inputs">
             <input type="text" id="ccName" placeholder="Nombre Tarjeta" />
             <input type="number" id="ccBalance" placeholder="Saldo Actual" />
