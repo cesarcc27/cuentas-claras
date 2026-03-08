@@ -102,14 +102,16 @@
         font-size: 1.4rem;
         margin-bottom: 2px;
       }
-
+      
+      /* Botón flotante para acceso rápido: */
       .fab {
         position: fixed;
-        bottom: 85px;
-        left: 20px;
+        bottom: 75px;
+        left: 300px;
         width: 56px;
         height: 56px;
-        background: var(--primary);
+        background: linear-gradient(150deg, var(--primary), #1d4ed8);
+        /*background: var(--primary);*/
         color: white;
         border-radius: 50%;
         border: none;
@@ -521,10 +523,12 @@
               id="currentMonthLabel"
               style="
                 margin: 0;
+                color: var(--primary);
                 min-width: 215px;
-                min-height: 40px;
+                /*min-height: 40px;*/
                 text-align: center;
-                font-weight: 700;
+                font-weight: 800;
+                font-size-adjust: var(--accent);
                 text-transform: capitalize;
                 font-size: clamp(1.6rem, 2.8vw, 1.2rem);
               "
