@@ -456,8 +456,8 @@
         font-weight: bold;
       }
       .is-today {
-        background: var(--accent);
-        color: white;
+        background: var(--primary);
+        color: rgb(0, 0, 0);
         border-color: var(--accent);
         transform: scale(1.1);
       }
@@ -1042,7 +1042,7 @@
           const day = getSafeDay(e.date);
           if (day) {
             if (!events[day]) events[day] = [];
-            events[day].push(`💸 ${e.desc}`);
+            events[day].push(`💸 ${e.desc}: $${e.amount.toFixed(2)}`);
           }
         });
 
@@ -1051,7 +1051,7 @@
           const day = getSafeDay(c.vence);
           if (day) {
             if (!events[day]) events[day] = [];
-            events[day].push(`💳 ${c.name}`);
+            events[day].push(`💳 ${c.name}: $${c.balance.toFixed(2)}`);
           }
         });
 
@@ -1060,7 +1060,7 @@
           const day = getSafeDay(s.date);
           if (day) {
             if (!events[day]) events[day] = [];
-            events[day].push(`📺 ${s.name}`);
+            events[day].push(`📺 ${s.name}: $${s.amount.toFixed(2)}`);
           }
         });
 
